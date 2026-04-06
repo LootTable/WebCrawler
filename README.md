@@ -11,12 +11,15 @@ A Python web crawler that fetches pages, extracts titles and outbound links, sto
 - Flags dead links using HTTP status codes
 - Records graph edges between source and target URLs
 
-## Current Stack
+## Architecture
 
 - Python
 - requests
 - BeautifulSoup4
 - SQLite
+- Java Spring Boot API
+
+The crawler fills `crawler.db`, and the Java API reads from that database to expose crawler data to a frontend or other clients.
 
 ## Current Status
 

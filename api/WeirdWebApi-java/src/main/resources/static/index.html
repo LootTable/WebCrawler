@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebCrawler Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="ambient ambient-left"></div>
+  <div class="ambient ambient-right"></div>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Crawler Dashboard</p>
+        <h1>Explore Pages, Dead Links, and Crawl Relationships</h1>
+        <p class="hero-text">
+          Browse the pages your Python crawler found, filter by title or dead-link status,
+          and inspect the outbound edges tied to each page.
+        </p>
+        <div class="hero-actions">
+          <div class="hero-note">
+            <span class="hero-note-label">Current mode</span>
+            <strong id="active-filter-label">Browsing all pages</strong>
+          </div>
+          <div class="hero-note">
+            <span class="hero-note-label">Database source</span>
+            <strong>crawler.db via Spring Boot</strong>
+          </div>
+        </div>
+      </div>
+      <div class="hero-stat-grid">
+        <article class="stat-card">
+          <span class="stat-label">Pages Loaded</span>
+          <strong id="page-count">0</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Dead Pages</span>
+          <strong id="dead-count">0</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Selected Page Edges</span>
+          <strong id="edge-count">0</strong>
+        </article>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <section class="column-left">
+        <section class="panel controls-panel">
+          <div class="panel-heading">
+            <h2>Filters</h2>
+            <p>Search the crawler data without touching the database directly.</p>
+          </div>
+          <form id="filter-form" class="filter-form">
+            <label class="field">
+              <span>Title Contains</span>
+              <input id="title-filter" name="title" type="text" placeholder="python, docs, wikipedia...">
+            </label>
+
+            <label class="field">
+              <span>Dead Status</span>
+              <select id="dead-filter" name="isDead">
+                <option value="">All pages</option>
+                <option value="0">Alive only</option>
+                <option value="1">Dead only</option>
+              </select>
+            </label>
+
+            <div class="button-row">
+              <button type="submit" class="primary-btn">Load Pages</button>
+              <button type="button" id="reset-filters" class="secondary-btn">Reset</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel insights-panel">
+          <div class="panel-heading">
+            <h2>Quick Read</h2>
+            <p>A small snapshot of the current result set.</p>
+          </div>
+          <div class="insight-grid">
+            <article class="insight-card">
+              <span class="meta-label">Alive Ratio</span>
+              <strong id="alive-ratio">0%</strong>
+            </article>
+            <article class="insight-card">
+              <span class="meta-label">Most Recent Filter</span>
+              <strong id="filter-summary">No filters applied</strong>
+            </article>
+          </div>
+        </section>
+      </section>
+
+      <section class="panel results-panel">
+        <div class="panel-heading results-heading">
+          <div>
+            <h2>Pages</h2>
+            <p>Click a page to inspect the edges that originate from that URL.</p>
+          </div>
+          <div id="pages-status" class="status-badge">Loading crawler pages...</div>
+        </div>
+        <div id="pages-list" class="card-list" aria-live="polite"></div>
+      </section>
+
+      <section class="column-right">
+        <section class="panel detail-panel">
+          <div class="panel-heading">
+            <h2>Selected Page</h2>
+            <p id="selected-url" class="selected-url">Choose a page to view its outbound links.</p>
+          </div>
+          <div id="page-detail" class="detail-card empty-state">
+            Select a page from the list to load its link relationships.
+          </div>
+        </section>
+
+        <section class="panel edges-panel">
+          <div class="edges-header">
+            <div>
+              <h3>Outbound Edges</h3>
+              <p id="edges-status" class="status-message">No page selected yet.</p>
+            </div>
+            <button type="button" id="reload-edges" class="secondary-btn" disabled>Refresh</button>
+          </div>
+          <div id="edges-list" class="edge-list" aria-live="polite"></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

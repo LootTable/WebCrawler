@@ -15,7 +15,8 @@ def init_db():
                     CREATE TABLE IF NOT EXISTS edges(
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     source_url TEXT,
-                    target_url TEXT
+                    target_url TEXT,
+                    UNIQUE(source_url, target_url)
                        )""")
         conn.commit()
 
@@ -24,8 +25,16 @@ def savepage(url: str, title: str, status_code: int, is_dead: int):
     with sqlite3.connect("crawler.db") as conn:
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT OR IGNORE INTO crawler (url, title, status_code, is_dead) VALUES (?, ?, ?, ?)"
-            ,(url, title, status_code, is_dead))
+            """
+            INSERT INTO crawler (url, title, status_code, is_dead)
+            VALUES (?, ?, ?, ?)
+            ON CONFLICT(url) DO UPDATE SET
+                title = excluded.title,
+                status_code = excluded.status_code,
+                is_dead = excluded.is_dead
+            """,
+            (url, title, status_code, is_dead)
+        )
         conn.commit()
 
 
@@ -33,7 +42,7 @@ def save_edge(source_url: str, target_url: str):
     with sqlite3.connect("crawler.db") as conn:
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT INTO edges(source_url, target_url) VALUES(?,?)",
+            "INSERT OR IGNORE INTO edges(source_url, target_url) VALUES(?,?)",
             (source_url, target_url))
         conn.commit()
 
@@ -59,5 +68,4 @@ def search_pages(query: str) -> list:
         )
         results = cursor.fetchall()
         return [dict(row) for row in results]
-
 

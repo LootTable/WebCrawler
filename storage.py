@@ -21,7 +21,7 @@ def init_db():
         conn.commit()
 
 
-def savepage(url: str, title: str, status_code: int, is_dead: int):
+def savepage(url: str, title: str | None, status_code: int, is_dead: int):
     with sqlite3.connect("crawler.db") as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -42,8 +42,9 @@ def save_edge(source_url: str, target_url: str):
     with sqlite3.connect("crawler.db") as conn:
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT OR IGNORE INTO edges(source_url, target_url) VALUES(?,?)",
-            (source_url, target_url))
+            "INSERT OR IGNORE INTO edges (source_url, target_url) VALUES (?, ?)",
+            (source_url, target_url),
+        )
         conn.commit()
 
 
@@ -51,21 +52,16 @@ def get_dead_links() -> list:
     with sqlite3.connect("crawler.db") as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
-        cursor.execute(
-        "SELECT * FROM crawler WHERE is_dead = 1 ")
+        cursor.execute("SELECT * FROM crawler WHERE is_dead = 1")
         results = cursor.fetchall()
         return [dict(row) for row in results]
-
-
 
 
 def search_pages(query: str) -> list:
     with sqlite3.connect("crawler.db") as conn:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
-        cursor.execute(
-        "SELECT * FROM crawler WHERE title LIKE ? ",(f"%{query}%",)
-        )
+        cursor.execute("SELECT * FROM crawler WHERE title LIKE ?", (f"%{query}%",))
         results = cursor.fetchall()
         return [dict(row) for row in results]
 

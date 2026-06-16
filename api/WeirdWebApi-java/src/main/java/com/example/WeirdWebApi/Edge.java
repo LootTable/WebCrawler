@@ -1,4 +1,5 @@
 package com.example.WeirdWebApi;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -7,20 +8,25 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "edges")
 public class Edge {
+    // Represents one discovered link from a source page to a target page.
     @Id
     private int id;
+
     @Column(name = "source_url")
     private String sourceUrl;
+
     @Column(name = "target_url")
     private String targetUrl;
 
-    public int getId(){
+    public int getId() {
         return id;
-    }   
-    public String getSourceUrl(){
+    }
+
+    public String getSourceUrl() {
         return sourceUrl;
     }
-    public String getTargetUrl(){
+
+    public String getTargetUrl() {
         return targetUrl;
     }
 }

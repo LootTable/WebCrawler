@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EdgeRepository extends JpaRepository<Edge, Integer> {
-List<Edge> findBySourceUrl(String sourceUrl);
+    // Used by the dashboard to show outbound links for a selected page.
+    List<Edge> findBySourceUrl(String sourceUrl);
 
 }

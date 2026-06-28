@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "crawler")
 public class CrawlerPage {
-    // Maps the SQLite crawler table so Spring can return crawled pages as JSON.
+    // Maps the crawler table so Spring can return crawled pages as JSON.
     @Id
     private int id;
     private String url;

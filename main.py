@@ -1,4 +1,3 @@
-
 from storage import init_db, search_pages, get_dead_links
 from crawler import crawl
 

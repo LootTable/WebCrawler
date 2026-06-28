@@ -13,7 +13,7 @@ headers = {"User-Agent": "Mozilla/5.0"}
 def fetch(url: str) -> requests.Response | None:
     # Keep request failures separate from HTTP errors like 404 or 500.
     try:
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=10)
         return response
     except requests.exceptions.RequestException as e:
         print(f"Error reaching {url}: {e}")

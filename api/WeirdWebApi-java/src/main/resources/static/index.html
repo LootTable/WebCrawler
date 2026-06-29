@@ -25,7 +25,7 @@
           </div>
           <div class="hero-note">
             <span class="hero-note-label">Database source</span>
-            <strong>crawler.db via Spring Boot</strong>
+            <strong>PostgreSQL via Spring Boot</strong>
           </div>
         </div>
       </div>
@@ -89,6 +89,14 @@
               <strong id="filter-summary">No filters applied</strong>
             </article>
           </div>
+        </section>
+
+        <section class="panel sessions-panel">
+          <div class="panel-heading">
+            <h2>Recent Runs</h2>
+            <p id="sessions-status">Loading crawler sessions...</p>
+          </div>
+          <div id="sessions-list" class="session-list" aria-live="polite"></div>
         </section>
       </section>
 

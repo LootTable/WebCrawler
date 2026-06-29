@@ -15,6 +15,8 @@ const edgeCount = document.getElementById("edge-count");
 const aliveRatio = document.getElementById("alive-ratio");
 const filterSummary = document.getElementById("filter-summary");
 const activeFilterLabel = document.getElementById("active-filter-label");
+const sessionsList = document.getElementById("sessions-list");
+const sessionsStatus = document.getElementById("sessions-status");
 
 let currentPages = [];
 let currentSelection = null;
@@ -184,6 +186,73 @@ function renderEdges(edges) {
     .join("");
 }
 
+function formatSessionTime(value) {
+  if (!value) {
+    return "Not completed";
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return date.toLocaleString();
+}
+
+function renderSessions(sessions) {
+  if (!sessions.length) {
+    sessionsList.innerHTML = "";
+    sessionsStatus.textContent = "No crawl sessions found yet.";
+    return;
+  }
+
+  sessionsStatus.textContent = `Showing ${sessions.length} recent crawl run${sessions.length === 1 ? "" : "s"}.`;
+  sessionsList.innerHTML = sessions
+    .map((session) => `
+      <article class="session-card">
+        <div class="session-card-header">
+          <span class="meta-label">Session ${session.id}</span>
+          <strong>${session.pagesAttempted}/${session.maxPages} pages</strong>
+        </div>
+        <p><a class="page-link" href="${session.startUrl}" target="_blank" rel="noreferrer">${session.startUrl}</a></p>
+        <div class="meta-grid">
+          <div class="meta-item">
+            <span class="meta-label">Max Depth</span>
+            <span class="meta-value">${session.maxDepth}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Failures</span>
+            <span class="meta-value">${session.requestFailures}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Started</span>
+            <span class="meta-value">${formatSessionTime(session.startedAt)}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Completed</span>
+            <span class="meta-value">${formatSessionTime(session.completedAt)}</span>
+          </div>
+        </div>
+      </article>
+    `)
+    .join("");
+}
+
+async function loadSessions() {
+  sessionsStatus.textContent = "Loading crawler sessions...";
+  sessionsList.innerHTML = "";
+
+  const response = await fetch("/sessions");
+
+  if (!response.ok) {
+    throw new Error(`Failed to load sessions (${response.status})`);
+  }
+
+  const sessions = await response.json();
+  renderSessions(sessions);
+}
+
 async function loadEdges(sourceUrl) {
   edgesStatus.textContent = "Loading edges...";
   edgesList.innerHTML = "";
@@ -271,9 +340,10 @@ async function initializeDashboard() {
   updateFilterCopy();
 
   try {
-    await loadPages();
+    await Promise.all([loadPages(), loadSessions()]);
   } catch (error) {
     pagesStatus.textContent = error.message;
+    sessionsStatus.textContent = error.message;
     renderPageStats([]);
   }
 }

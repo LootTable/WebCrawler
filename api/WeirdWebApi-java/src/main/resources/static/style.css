@@ -156,6 +156,7 @@ body {
 .detail-card,
 .page-card,
 .edge-card,
+.session-card,
 .insight-card {
   border: 1px solid var(--border);
   background: var(--panel);
@@ -202,6 +203,7 @@ body {
 .detail-panel,
 .edges-panel,
 .controls-panel,
+.sessions-panel,
 .insights-panel {
   min-width: 0;
 }
@@ -348,10 +350,15 @@ button:disabled {
 }
 
 .card-list,
-.edge-list {
+.edge-list,
+.session-list {
   display: grid;
   gap: 16px;
   min-width: 0;
+}
+
+.session-list {
+  margin-top: 18px;
 }
 
 .card-list {
@@ -362,7 +369,8 @@ button:disabled {
 
 .page-card,
 .detail-card,
-.edge-card {
+.edge-card,
+.session-card {
   border-radius: 22px;
   padding: 20px;
   min-width: 0;
@@ -375,6 +383,16 @@ button:disabled {
   transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
 }
 
+.session-card {
+  box-shadow: none;
+}
+
+.session-card-header strong {
+  color: var(--primary-strong);
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
 .page-card:hover,
 .page-card.active {
   transform: translateY(-3px);
@@ -385,7 +403,8 @@ button:disabled {
 
 .page-card::before,
 .detail-card::before,
-.edge-card::before {
+.edge-card::before,
+.session-card::before {
   content: "";
   position: absolute;
   top: 0;
@@ -396,6 +415,7 @@ button:disabled {
 }
 
 .page-card-header,
+.session-card-header,
 .meta-grid,
 .edges-header {
   display: flex;
@@ -416,6 +436,7 @@ button:disabled {
 
 .page-card p,
 .edge-card p,
+.session-card p,
 .detail-card p {
   margin: 8px 0 0;
   min-width: 0;
@@ -562,6 +583,7 @@ button:disabled {
   }
 
   .page-card-header,
+  .session-card-header,
   .edges-header {
     flex-direction: column;
     align-items: flex-start;

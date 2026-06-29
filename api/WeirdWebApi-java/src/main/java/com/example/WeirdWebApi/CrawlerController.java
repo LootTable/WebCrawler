@@ -10,10 +10,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class CrawlerController {
     private final CrawlerPageRepository crawlerPageRepository;
     private final EdgeRepository edgeRepository;
+    private final CrawlSessionRepository crawlSessionRepository;
 
-    public CrawlerController(CrawlerPageRepository crawlerPageRepository, EdgeRepository edgeRepository) {
+    public CrawlerController(
+        CrawlerPageRepository crawlerPageRepository, 
+        EdgeRepository edgeRepository, 
+        CrawlSessionRepository crawlSessionRepository
+    ) {
         this.crawlerPageRepository = crawlerPageRepository;
         this.edgeRepository = edgeRepository;
+        this.crawlSessionRepository = crawlSessionRepository;
     }
 
     // Optional query parameters let the dashboard reuse one endpoint for filters.
@@ -37,4 +43,10 @@ public class CrawlerController {
     public List<Edge> findEdgesBySourceUrl(@RequestParam String sourceUrl) {
         return edgeRepository.findBySourceUrl(sourceUrl);
     }
+
+    @GetMapping("/sessions")
+    public List<CrawlSession> getSessions() {
+        return crawlSessionRepository.findTop10ByOrderByIdDesc();
+    }
+
 }
